@@ -40,7 +40,7 @@ defaults with crusty specifics or dilute them to uselessness.
   Claude Code process skills.
 - **`crusty-meta`** (family-scoped): the family README (roles, inter-repo pinning rules, release
   and board policy), cross-repo ADRs, and crusty-specific template blocks.
-- **Sync mechanism:** each repo carries a `.meta-manifest` whose entries pin
+- **Sync mechanism:** each repo carries a `.meta-manifest.toml` whose entries pin
   `source repo @ SHA : path → destination` (whole-file or marker-delimited block); a local
   `meta-check`/`meta-sync` recipe and a reusable CI job diff against the pin, so upstream changes
   never surprise-redden unrelated PRs and adopting them is an explicit pin bump.

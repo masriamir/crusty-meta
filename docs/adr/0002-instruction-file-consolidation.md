@@ -28,7 +28,7 @@ without re-introducing drift?
   with its repo — over-centralizing it would couple unlike repos.
 - Concise files matter: excessive or duplicated instruction text degrades LLM performance
   (General item 8), so consolidation is also a trimming pass.
-- Reuse the sync machinery already built (ADR-0001 `.meta-manifest` block mode), not a new one.
+- Reuse the sync machinery already built (ADR-0001 `.meta-manifest.toml` block mode), not a new one.
 
 ## Considered options
 

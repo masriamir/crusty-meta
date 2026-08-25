@@ -49,7 +49,7 @@ specific to the crusty family.
 - [`docs/adr/`](docs/adr/) — **cross-repo** architecture decision records (decisions that span the
   family; single-repo decisions stay in that repo's own `docs/adr/`)
 - `templates/` (planned) — crusty-specific canonical blocks consumed by each repo's
-  `.meta-manifest` via the shared `meta-check` drift check
+  `.meta-manifest.toml` via the shared `meta-check` drift check
 
 ## License
 
