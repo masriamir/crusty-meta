@@ -36,8 +36,9 @@ defaults with crusty specifics or dilute them to uselessness.
 
 - **`masriamir/.github`** (account-generic): live defaults limited to `CODE_OF_CONDUCT.md` and a
   generic `SECURITY.md` (issue/PR templates are deliberately **not** live defaults); canonical
-  `templates/` and `scripts/` consumed by sync; reusable workflows (`pr-title`, `meta-check`);
-  Claude Code process skills.
+  `templates/` and `scripts/` consumed by sync; reusable workflows (`pr-title`, `meta-check`).
+  (Claude Code process skills were originally slated to live here; that was reversed — skills are
+  personal to a Claude installation and stay local to `~/.claude`, never in a public repo.)
 - **`crusty-meta`** (family-scoped): the family README (roles, inter-repo pinning rules, release
   and board policy), cross-repo ADRs, and crusty-specific template blocks.
 - **Sync mechanism:** each repo carries a `.meta-manifest.toml` whose entries pin

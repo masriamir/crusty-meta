@@ -54,7 +54,7 @@ family:
 | `commit-conventions` | Conventional Commits; the PR title **is** the squash commit / changelog entry / version bump; blank squash body; never `gh pr create --fill` |
 | `branch-naming` | `<type>/<slug>` with `type ∈ {feature,bugfix,hotfix,docs,chore}`, issue number optional, descriptive slug required; branch from `main` |
 | `board-transitions` | Agent-driven GitHub Project Status flow: Backlog → Ready → In progress → In review → Done (only Done is board-automated) |
-| `copilot-review-loop` | Ready-for-human-review = every bot thread resolved **and** required CI green **and** codecov clean; use the review-resolution skill |
+| `copilot-review-loop` | Ready-for-human-review = every bot thread resolved **and** required CI green **and** codecov clean (stated tool-neutrally; the Claude skill that drives the loop is personal, local config, never referenced from a repo) |
 
 **Per-repo file layout** (all three repos converge on this):
 
