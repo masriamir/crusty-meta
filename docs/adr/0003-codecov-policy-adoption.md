@@ -70,12 +70,16 @@ a source and cannot be edited into disagreement.
 
 ### Consumer set and exceptions
 
+All four consumers pin the same upstream commit —
+`8078029680e0e50db226cf506586bb4bdcbb545f`, the merge of
+[masriamir/.github#13](https://github.com/masriamir/.github/pull/13):
+
 | Repository | Pin | Status fragments | Comment fragment | Local content preserved |
 |---|---|---|---|---|
-| crustywad | adopted | yes — patch already 90%, project newly gated | yes | patch overflow-guard note |
-| crustyview | adopted | yes — patch 80% → 90%, project `auto` → 90% | yes | full wasm SCOPE comment; no `ignore` added |
-| crustygen | adopted | yes — project `auto`/1% → 90% | yes | `ignore: examples/**` and `liftprobe` rationale |
-| crustyllm | adopted | **no** | **no** | — |
+| crustywad | `8078029` | yes — patch already 90%, project newly gated | yes | patch overflow-guard note |
+| crustyview | `8078029` | yes — patch 80% → 90%, project `auto` → 90% | yes | full wasm SCOPE comment; no `ignore` added |
+| crustygen | `8078029` | yes — project `auto`/1% → 90% | yes | `ignore: examples/**` and `liftprobe` rationale |
+| crustyllm | `8078029` | **no** | **no** | — |
 
 `crustyllm` takes the shared-file pin only. It is out of scope for the coverage policy under this
 ADR; revisit when its coverage story is settled.
@@ -120,11 +124,27 @@ Therefore, for any repository adopting the status fragments:
 
 - Check both GitHub surfaces, since Codecov appears as a check run on PR heads and as a commit
   status on the default branch:
-  `gh api repos/OWNER/REPO/commits/<sha>/check-runs` and `.../commits/<sha>/status`.
+  ```bash
+  gh api repos/OWNER/REPO/commits/<sha>/check-runs
+  gh api repos/OWNER/REPO/commits/<sha>/status
+  ```
 - Treat a missing `codecov/project` as an **open defect**, not an adoption failure. The config is
   correct — it validates against `https://codecov.io/validate` — so the fault is downstream.
 - Do not require `codecov/project` in a ruleset until it has been observed posting. Requiring a
   status that never arrives blocks every merge.
+
+### Consequences
+
+- Good, because the coverage target has one source; a drifted copy reddens `meta-check`.
+- Good, because the `require_changes` defect is fixed once, upstream, rather than three times.
+- Good, because per-repo reasoning survives verbatim outside the markers.
+- Bad, because raising crustyview's patch target 80% → 90% tightens a gate against a documented
+  rationale about wasm code being structurally invisible to `cargo llvm-cov`. All three
+  repositories sit at 98–99%, so there is roughly eight points of headroom — but the reasoning in
+  that scope comment matters more after the change, not less.
+- Bad, because adoption is a coordinated per-repo pin bump; a future policy edit repeats it.
+- Neutral, because the fragments remain account-generic and opt-in. This ADR records that the
+  Crusty family adopts them; it does not make them Crusty-owned.
 
 ## Pros and cons of the options
 
@@ -139,19 +159,6 @@ Therefore, for any repository adopting the status fragments:
 - Good, because trivially consistent.
 - Bad, because `ignore` lists and scope rationales differ materially per repository; the file
   would either discard them or impose each repository's specifics on the others.
-
-### Consequences
-
-- Good, because the coverage target has one source; a drifted copy reddens `meta-check`.
-- Good, because the `require_changes` defect is fixed once, upstream, rather than three times.
-- Good, because per-repo reasoning survives verbatim outside the markers.
-- Bad, because raising crustyview's patch target 80% → 90% tightens a gate against a documented
-  rationale about wasm code being structurally invisible to `cargo llvm-cov`. All three
-  repositories sit at 98–99%, so there is roughly eight points of headroom — but the reasoning in
-  that scope comment matters more after the change, not less.
-- Bad, because adoption is a coordinated per-repo pin bump; a future policy edit repeats it.
-- Neutral, because the fragments remain account-generic and opt-in. This ADR records that the
-  Crusty family adopts them; it does not make them Crusty-owned.
 
 ## More information
 
