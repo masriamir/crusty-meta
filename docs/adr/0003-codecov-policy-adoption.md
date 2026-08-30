@@ -37,7 +37,7 @@ encode?
 - Adoption must be opt-in per fragment, so a repository can take the comment policy without the
   status targets, or vice versa.
 - A coverage gate that silently does not run is worse than no gate — the same class of problem as
-  the `continue-on-error` crustyview removed in its #69.
+  the `continue-on-error` removed in masriamir/crustyview#69.
 
 ## Considered options
 
@@ -102,11 +102,11 @@ is what makes the order below load-bearing.
    ref: `masriamir/.github`'s `scripts/meta_sync.py` requires a 40-character commit SHA, and only
    a merged commit is stable.
 2. **Tool before content.** A consumer's vendored `scripts/meta_sync.py` is itself
-   manifest-tracked, and the version predating #13 splices canonical bytes verbatim. The Codecov
-   fragments are nesting-neutral and rely on the re-indenting sync introduced in #13, so each
-   consumer must bump and sync the **vendored tool** before adding the Codecov entries. The other
-   order writes un-indented bytes into `coverage.status.*` and produces invalid YAML that the
-   byte-oriented drift check cannot see.
+   manifest-tracked, and the version predating masriamir/.github#13 splices canonical bytes
+   verbatim. The Codecov fragments are nesting-neutral and rely on the re-indenting sync
+   introduced there, so each consumer must bump and sync the **vendored tool** before adding the
+   Codecov entries. The other order writes un-indented bytes into `coverage.status.*` and produces
+   invalid YAML that the byte-oriented drift check cannot see.
 3. **Per-repo adoption.** One issue and one pull request per repository, each pinned to the same
    merged upstream commit.
 4. **Verification.** Below.
@@ -123,9 +123,9 @@ incidentally, since the shared fragment uses an absolute target and needs no bas
 
 It did not hold. On the three adoption PRs — with absolute `target: 90%` — `codecov/patch` posts
 and **`codecov/project` still does not, in all three repositories**. So the behavior is not
-crustyview-specific and not caused by `target: auto`; that eliminates #99's third candidate and
-points at a Codecov-side cause (an account or repository setting overriding the status, or a plan
-restriction).
+crustyview-specific and not caused by `target: auto`; that eliminates masriamir/crustyview#99's
+third candidate and points at a Codecov-side cause (an account or repository setting overriding
+the status, or a plan restriction).
 
 Therefore, for any repository adopting the status fragments:
 
