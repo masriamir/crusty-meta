@@ -92,14 +92,21 @@ report silently passes. Adopting before uploads work leaves both statuses red.
 
 The order is not incidental — each stage is a precondition for the next.
 
+The sync tool is `masriamir/.github`'s `scripts/meta_sync.py`. It does not live in this
+repository; each consumer vendors a copy to the same path, and that vendored copy is itself
+manifest-tracked, so the tool is both the thing doing the syncing and a thing being synced. That
+is what makes the order below load-bearing.
+
 1. **Canonical first.** The fragments are authored and merged in `masriamir/.github`
    ([#13](https://github.com/masriamir/.github/pull/13)). Nothing is adopted against an unmerged
-   ref: `meta_sync.py` requires a 40-character commit SHA, and only a merged commit is stable.
-2. **Tool before content.** `scripts/meta_sync.py` is itself manifest-tracked, and the version
-   that predates #13 splices canonical bytes verbatim. The Codecov fragments are nesting-neutral
-   and rely on the re-indenting sync introduced in #13, so each consumer must bump and sync the
-   **tool** before adding the Codecov entries. The other order writes un-indented bytes into
-   `coverage.status.*` and produces invalid YAML that the byte-oriented drift check cannot see.
+   ref: `masriamir/.github`'s `scripts/meta_sync.py` requires a 40-character commit SHA, and only
+   a merged commit is stable.
+2. **Tool before content.** A consumer's vendored `scripts/meta_sync.py` is itself
+   manifest-tracked, and the version predating #13 splices canonical bytes verbatim. The Codecov
+   fragments are nesting-neutral and rely on the re-indenting sync introduced in #13, so each
+   consumer must bump and sync the **vendored tool** before adding the Codecov entries. The other
+   order writes un-indented bytes into `coverage.status.*` and produces invalid YAML that the
+   byte-oriented drift check cannot see.
 3. **Per-repo adoption.** One issue and one pull request per repository, each pinned to the same
    merged upstream commit.
 4. **Verification.** Below.
