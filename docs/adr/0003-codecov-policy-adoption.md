@@ -122,23 +122,45 @@ proposed `target: auto` failing to resolve a base as a candidate cause. The roll
 incidentally, since the shared fragment uses an absolute target and needs no base.
 
 It did not hold. On the three adoption PRs — with absolute `target: 90%` — `codecov/patch` posts
-and **`codecov/project` still does not, in all three repositories**. So the behavior is not
-crustyview-specific and not caused by `target: auto`; that eliminates masriamir/crustyview#99's
-third candidate and points at a Codecov-side cause (an account or repository setting overriding
-the status, or a plan restriction).
+and **`codecov/project` still does not, in all three repositories**. That eliminated
+masriamir/crustyview#99's leading candidate and, with a repository-specific fault, invalid
+configuration, a broken upload, and repository visibility all ruled out, left the plan itself.
 
-Therefore, for any repository adopting the status fragments:
+**Project coverage is a paid-plan feature, and this account is on the free Developer plan.**
+Codecov's [pricing page](https://about.codecov.io/pricing/) lists **Project Coverage** among the
+features the Developer plan excludes and the Pro plan adds; the Developer plan includes **Patch
+Coverage**. That is exactly the split observed. `codecov/project` is not published at all here, and
+will not be while the account is on this plan.
 
-- Check both GitHub surfaces, since Codecov appears as a check run on PR heads and as a commit
-  status on the default branch:
-  ```bash
-  gh api repos/OWNER/REPO/commits/<sha>/check-runs
-  gh api repos/OWNER/REPO/commits/<sha>/status
-  ```
-- Treat a missing `codecov/project` as an **open defect**, not an adoption failure. The config is
-  correct — it validates against `https://codecov.io/validate` — so the fault is downstream.
-- Do not require `codecov/project` in a ruleset until it has been observed posting. Requiring a
-  status that never arrives blocks every merge.
+Codecov's own documentation disagrees with itself on the point. The
+[FAQ](https://docs.codecov.com/docs/frequently-asked-questions) and
+[common-recipe list](https://docs.codecov.com/docs/common-recipe-list) describe the restriction as
+applying only to *private* repositories on the `team` plan, which would grant project coverage to
+any public repository — and all three adopting repositories are public. The observed behavior
+matches the pricing page rather than the FAQ. Recorded here so it is not re-derived.
+
+The consequence for this family is standing, not provisional:
+
+- **`codecov/patch` is the status that gates.** It posts reliably and enforces the 90% target on
+  changed lines. The project half of the fragment is inert on this plan.
+- **Never add `codecov/project` to a branch ruleset's required checks.** A required status that is
+  never published blocks every merge.
+- The `project` block is still adopted, so the target stays defined in one place and applies
+  wherever the account is entitled to it. It is documented as inert rather than deleted, because
+  deleting it would make the shared fragment express less than the policy it encodes.
+
+The verification method remains worth keeping, for any status on any repository — check both
+GitHub surfaces, since Codecov appears as a check run on PR heads and as a commit status on the
+default branch:
+
+```bash
+gh api repos/OWNER/REPO/commits/<sha>/check-runs
+gh api repos/OWNER/REPO/commits/<sha>/status
+```
+
+The general principle stands regardless of this particular cause: **a status that never posts is
+indistinguishable from one that passes**, so a configured gate is not a gate until it has been
+observed firing.
 
 ### Consequences
 
@@ -173,7 +195,9 @@ Therefore, for any repository adopting the status fragments:
   [`templates/blocks/README.md`](https://github.com/masriamir/.github/blob/main/templates/blocks/README.md).
 - The policy is owned by `masriamir/.github` per [ADR-0001](0001-two-meta-repo-architecture.md);
   the block-sync machinery is [ADR-0002](0002-instruction-file-consolidation.md).
-- Revisit when: `codecov/project` is diagnosed (crustyview#99), `crustyllm`'s coverage story
-  settles, or a repository needs a target the shared fragment cannot express — in which case the
-  documented opt-out is to drop the manifest entry **and delete the marker lines and their body**,
-  since an orphaned marker keeps its last-synced content.
+- `codecov/project` is diagnosed: masriamir/crustyview#99's investigation ends in the plan
+  restriction recorded above, not a defect to fix.
+- Revisit when: `crustyllm`'s coverage story settles, the account's Codecov plan changes, or a
+  repository needs a target the shared fragment cannot express — in which case the documented
+  opt-out is to drop the manifest entry **and delete the marker lines and their body**, since an
+  orphaned marker keeps its last-synced content.
